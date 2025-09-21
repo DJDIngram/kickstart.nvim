@@ -33,7 +33,7 @@ require('lazy').setup({
 
   require 'kickstart.plugins.conform',
 
-  require 'kickstart.plugin.tokyonight',
+  require 'kickstart.plugins.tokyonight',
 
   require 'kickstart.plugins.blink-cmp',
 
