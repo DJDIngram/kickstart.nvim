@@ -5,8 +5,13 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+      local util = require 'lspconfig.util'
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
+        javascript = { 'eslint_d' },
+        javascriptreact = { 'eslint_d' },
+        typescript = { 'eslint_d' },
+        typescriptreact = { 'eslint_d' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -41,6 +46,10 @@ return {
       -- lint.linters_by_ft['terraform'] = nil
       -- lint.linters_by_ft['text'] = nil
 
+      -- For instances where I'm using a monorepo (Spruce) and the eslint file is inside a child directory, this can search my cwd for the closest of these files.
+      -- Add lint configs as needed
+      local find_project_root = util.root_pattern('package.json', 'eslint.config.mjs')
+
       -- Create autocommand which carries out the actual linting
       -- on the specified events.
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
@@ -51,7 +60,11 @@ return {
           -- avoid superfluous noise, notably within the handy LSP pop-ups that
           -- describe the hovered symbol using Markdown.
           if vim.bo.modifiable then
-            lint.try_lint()
+            local current_file = vim.api.nvim_buf_get_name(0)
+            local cwd = find_project_root(current_file) or vim.fn.getcwd()
+
+            cwd = cwd or vim.fn.getcwd()
+            lint.try_lint(nil, { cwd = cwd })
           end
         end,
       })
