@@ -210,11 +210,11 @@ return {
       local servers = {
         html = {},
         cssls = {},
-        -- ts_ls = {},
         tailwindcss = {},
         jsonls = {},
         markdownlint = {},
         prettierd = {},
+        prismals = {},
         -- eslint_d = {},
         -- clangd = {},
         -- gopls = {},
